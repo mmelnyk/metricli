@@ -6,7 +6,6 @@ jobs:
     name: Build and Release
     strategy:
       matrix:
-        go_version: [1.14.x]
         go_os: [linux, darwin, windows]
         go_arch: [amd64]
     runs-on: ubuntu-latest
@@ -14,7 +13,7 @@ jobs:
     - name: Install Go
       uses: actions/setup-go@v1
       with:
-        go-version: ${{ matrix.go_version }}
+        go-version: 1.14.x
     - name: Checkout code
       uses: actions/checkout@v1
     - name: Build
@@ -26,7 +25,7 @@ jobs:
     - name: Pack binary (windows)
       if: matrix.go_os == 'windows'
       run: |
-          mv bin/* bin/*.exe
+          mv bin/metricli bin/metricli.exe
           zip metricli.zip bin/*    
     - name: Pack binary
       if: matrix.go_os != 'windows'
