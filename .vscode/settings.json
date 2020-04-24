@@ -1,0 +1,14 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+    "**/.vscode": false,
+    "**/.editorconfig": true,
+    "**/.gitignore": true,
+    "**/*.exe": true
+  },
+  "search.exclude": {
+    "**/.git": true,
+    "**/*.exe": true
+  }
+}

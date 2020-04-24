@@ -1,0 +1,41 @@
+#!/bin/sh
+#
+
+set -e
+exec 1>&2
+
+# Check if changed files are well formated 
+git diff --cached --name-status | while read st file; do
+        # skip deleted files
+        if [ "$st" == 'D' ]; then continue; fi
+        # do a check only on the go files
+        if [[ "$file" =~ ".go" ]]; then
+		fmtdiff=`gofmt -d $file`
+		if [ -n "$fmtdiff" ]
+		then
+			echo >&2 "File $file is not well formated. Please use go fmt to format it."
+			exit 1
+		fi
+        fi
+done
+
+# Do golint on updated files
+git diff --cached --name-status | while read st file; do
+        # skip deleted files
+        if [ "$st" == 'D' ]; then continue; fi
+        # do a check only on the go files
+        if [[ "$file" =~ ".go" ]]; then
+		golint $file
+        fi
+done
+
+
+# Do go vet on updated files
+git diff --cached --name-status | while read st file; do
+        # skip deleted files
+        if [ "$st" == 'D' ]; then continue; fi
+        # do a check only on the go files
+        if [[ "$file" =~ ".go" ]]; then
+		go vet ./$(dirname $file)/...
+        fi
+done

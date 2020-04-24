@@ -1,0 +1,6 @@
+# Project parameters
+GOMODULE = go.melnyk.org/metricli
+
+# List of directories with binaries code
+BINARIES = \
+	./cmd/metricli
