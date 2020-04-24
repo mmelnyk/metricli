@@ -1,0 +1,43 @@
+on: [release]
+
+name: Golang Build and Upload Release Asset
+jobs:
+  build:
+    name: Build and Release
+    strategy:
+      matrix:
+        go_version: [1.14.x]
+        go_os: [linux, darwin, windows]
+        go_arch: [amd64]
+    runs-on: ubuntu-latest
+    steps:
+    - name: Install Go
+      uses: actions/setup-go@v1
+      with:
+        go-version: ${{ matrix.go_version }}
+    - name: Checkout code
+      uses: actions/checkout@v1
+    - name: Build
+      env:
+        GOARCH: ${{ matrix.go_arch }}
+        GOOS: ${{ matrix.go_os }}
+        RELEASE: ${{ github.event.release.tag_name }}
+      run: make build
+    - name: Pack binary (windows)
+      if: matrix.go_os == 'windows'
+      run: |
+          mv bin/* bin/*.exe
+          zip metricli.zip bin/*    
+    - name: Pack binary
+      if: matrix.go_os != 'windows'
+      run: zip metricli.zip bin/*   
+    - name: Upload Release Asset
+      id: upload-release-asset 
+      uses: actions/upload-release-asset@v1.0.1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        upload_url: ${{ github.event.release.upload_url }} 
+        asset_path: ./metricli.zip
+        asset_name: metricli-${{ matrix.go_arch }}-${{ matrix.go_os }}-${{github.event.release.tag_name}}.zip
+        asset_content_type: application/zip

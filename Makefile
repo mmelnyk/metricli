@@ -56,7 +56,7 @@ build/%: prebuild
 	$(GOBUILD) $(GOBUILDOUT) ${@:build/%=%}
 
 .PHONY=test
-test: prebuild ## run unit tests with code coverage info
+test: prebuild _bindir ## run unit tests with code coverage info
 	$(GOTEST) -cover -coverprofile=$(GOOUTDIR)/cover.out ./...
 	go tool cover -html=$(GOOUTDIR)/cover.out -o $(GOOUTDIR)/cover.html
 
