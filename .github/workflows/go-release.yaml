@@ -11,11 +11,11 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Install Go
-      uses: actions/setup-go@v1
+      uses: actions/setup-go@v3
       with:
-        go-version: 1.14.x
+        go-version: 1.20.x
     - name: Checkout code
-      uses: actions/checkout@v1
+      uses: actions/checkout@v3
     - name: Build
       env:
         GOARCH: ${{ matrix.go_arch }}
@@ -26,17 +26,17 @@ jobs:
       if: matrix.go_os == 'windows'
       run: |
           mv bin/metricli bin/metricli.exe
-          zip metricli.zip bin/*    
+          zip metricli.zip bin/*
     - name: Pack binary
       if: matrix.go_os != 'windows'
-      run: zip metricli.zip bin/*   
+      run: zip metricli.zip bin/*
     - name: Upload Release Asset
-      id: upload-release-asset 
+      id: upload-release-asset
       uses: actions/upload-release-asset@v1.0.1
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       with:
-        upload_url: ${{ github.event.release.upload_url }} 
+        upload_url: ${{ github.event.release.upload_url }}
         asset_path: ./metricli.zip
         asset_name: metricli-${{ matrix.go_arch }}-${{ matrix.go_os }}-${{github.event.release.tag_name}}.zip
         asset_content_type: application/zip

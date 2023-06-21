@@ -6,27 +6,24 @@
 // ${fileExtname}: the current opened file's extension
 // ${cwd}: the current working directory of the spawned process
 {
-    "version": "0.1.0",
+    "version": "2.0.0",
     "command": "go",
     "echoCommand": true,
-    // The command is a shell script
-    "isShellCommand": true,
-    // Show the output window only if unrecognized errors occur.
-    "showOutput": "always",
     "tasks": [
         {
-            "taskName": "build",
+            "label": "build",
+            "type": "shell",
+            "command": "go",
             "args": [
+                "build",
                 "-v"
             ],
             "problemMatcher": {
                 "owner": "go",
-                // The file name for reported problems is relative to the current working directory.
                 "fileLocation": [
                     "relative",
                     "${cwd}"
                 ],
-                // The actual pattern to match problems in the output.
                 "pattern": {
                     "regexp": "^(.+)\\:(\\d+)\\:(.+)$",
                     "file": 1,
@@ -34,31 +31,34 @@
                     "message": 3
                 }
             },
-            // Make this the default build command.
-            "isBuildCommand": true
+            "group": {
+                "_id": "build",
+                "isDefault": false
+            }
         },
         {
-            "taskName": "tool",
-            "problemMatcher": {
-                "owner": "go",
-                // The file name for reported problems is relative to the current working directory.
-                "fileLocation": [
-                    "relative",
-                    "${cwd}"
-                ],
-                // The actual pattern to match problems in the output.
-                "pattern": {
-                    "regexp": "^(.+)\\:(\\d+)\\:(.+)$",
-                    "file": 1,
-                    "location": 2,
-                    "message": 3
-                }
-            },
+            "label": "tool",
+            "type": "shell",
+            "command": "go",
             "args": [
+                "tool",
                 "vet",
                 "-all",
                 "."
-            ]
+            ],
+            "problemMatcher": {
+                "owner": "go",
+                "fileLocation": [
+                    "relative",
+                    "${cwd}"
+                ],
+                "pattern": {
+                    "regexp": "^(.+)\\:(\\d+)\\:(.+)$",
+                    "file": 1,
+                    "location": 2,
+                    "message": 3
+                }
+            }
         }
     ]
 }
