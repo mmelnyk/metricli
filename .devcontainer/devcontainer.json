@@ -1,0 +1,68 @@
+// For format details, see https://aka.ms/devcontainer.json. For config options, see the
+{
+	"name": "golang-metricli",
+	// Or use a Dockerfile or Docker Compose file. More info: https://containers.dev/guide/dockerfile
+	"image": "mcr.microsoft.com/devcontainers/go:latest",
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {},
+	// Configure tool-specific properties.
+	"customizations": {
+		// Configure properties specific to VS Code.
+		"vscode": {
+			"settings": {},
+			"extensions": [
+				"golang.go",
+				"ms-vscode.cmake-tools",
+				"EditorConfig.EditorConfig",
+				"ms-vscode.makefile-tools",
+				"github.copilot-chat"
+			]
+		}
+	},
+	"mounts": [
+		{
+			"source": "${localEnv:HOME}${localEnv:USERPROFILE}/.copilot",
+			"target": "/home/vscode/.copilot",
+			"type": "bind"
+		},
+		{
+			"source": "${localEnv:HOME}${localEnv:USERPROFILE}/.ssh",
+			"target": "/home/vscode/.ssh",
+			"type": "bind"
+		},
+		{
+			"source": "${localEnv:HOME}${localEnv:USERPROFILE}/.gitconfig",
+			"target": "/home/vscode/.gitconfig",
+			"type": "bind"
+		},
+		{
+			"source": "${localEnv:HOME}${localEnv:USERPROFILE}/.gitattributes",
+			"target": "/home/vscode/.gitattributes",
+			"type": "bind"
+		}
+	],
+	// Inject variables into the container's environment.
+	"containerEnv": {
+		// This allows us to run different scripts based on the environment.
+		"ENVIRONMENT": "development"
+	},
+	"remoteEnv": {},
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+	// Use 'postCreateCommand' to run commands after the container is created.
+	// "postCreateCommand": "rustc --version",
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+	// Give the running container a name to more easily identify it. Uses workspace folder name to allow
+	// multiple instances from different checkouts.
+	"runArgs": [
+		"--name",
+		"${localWorkspaceFolderBasename}-dev",
+		"--cap-add=SYS_PTRACE",
+		"--cap-add=PERFMON",
+		"--cap-add=IPC_LOCK",
+		"--cap-add=SYSLOG",
+		"--security-opt",
+		"seccomp=unconfined"
+	]
+}
